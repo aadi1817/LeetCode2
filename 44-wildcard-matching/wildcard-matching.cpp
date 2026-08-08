@@ -3,23 +3,22 @@ public:
     bool isMatch(string s, string p) {
         int m=s.length();
         int n=p.length();
-        vector<vector<bool>> dp(n+1,vector<bool>(m+1,false));
-        dp[0][0]=true;
-        for(int j=1;j<m+1;j++) dp[0][j]=false;
+        vector<bool> dp(m+1,false),curr(m+1,false);
+        dp[0]=true;
+        for(int j=1;j<m+1;j++) dp[j]=false;
         for(int i=1;i<n+1;i++){
             bool flag=true;
             for(int k=1;k<i+1;k++){
                 if(p[k-1]!='*') flag=false;
             }
-            dp[i][0]=flag;
-        }
-        for(int i=1;i<n+1;i++){
+            curr[0]=flag;
             for(int j=1;j<m+1;j++){
-                if(p[i-1]==s[j-1] || p[i-1]=='?') dp[i][j]=dp[i-1][j-1];
-                else if(p[i-1]=='*') dp[i][j]=dp[i-1][j] || dp[i][j-1];
-                else dp[i][j]=false;
+                if(p[i-1]==s[j-1] || p[i-1]=='?') curr[j]=dp[j-1];
+                else if(p[i-1]=='*') curr[j]=dp[j] || curr[j-1];
+                else curr[j]=false;
             }
+            dp=curr;
         }
-        return dp[n][m];
+        return dp[m];
     }
 };
